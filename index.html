@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Downloader by nata~</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f4faf7;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 860px;
+      width: 100%;
+    }
+
+    /* profile kotak paling atas */
+    .profile-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+
+    .profile-square {
+      width: 120px;
+      height: 120px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 4px solid #0f3b28;
+      box-shadow: 0 20px 35px -8px rgba(15, 59, 40, 0.3);
+      margin-bottom: 18px;
+    }
+
+    .profile-square img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-block h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #0f3b28;
+      letter-spacing: -0.7px;
+      margin-bottom: 6px;
+    }
+
+    .profile-block .smile-tag {
+      background: #deffec;
+      color: #1d5e3a;
+      padding: 8px 28px;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #a0d8b6;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 56px;
+      padding: 44px 40px;
+      box-shadow: 0 35px 65px -15px rgba(15, 59, 40, 0.3);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 38px;
+    }
+
+    .pill {
+      background: #ecfef4;
+      color: #1b613b;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 28px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #bbe6ce;
+      box-shadow: 0 2px 6px rgba(0,40,20,0.02);
+    }
+
+    .pill i {
+      color: #1e8b4c;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+      background: #f0fdf6;
+      border: 1.5px solid #bbe6ce;
+      border-radius: 120px;
+      padding: 6px 6px 6px 28px;
+      margin-bottom: 32px;
+    }
+
+    .input-line i {
+      color: #1e8b4c;
+      font-size: 1.5rem;
+      margin-right: 16px;
+    }
+
+    .input-line input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 18px 8px;
+      font-size: 1rem;
+      color: #0a3020;
+      outline: none;
+      width: 100%;
+    }
+
+    .input-line input::placeholder {
+      color: #86b79c;
+    }
+
+    .input-line button {
+      background: #0f3b28;
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 16px 38px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+
+    .input-line button:hover {
+      background: #1f5f3f;
+    }
+
+    .format-switch {
+      display: flex;
+      gap: 16px;
+      margin: 28px 0 30px;
+    }
+
+    .format-opt {
+      flex: 1;
+      background: #ffffff;
+      border: 1.5px solid #bbe6ce;
+      border-radius: 80px;
+      padding: 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #1f4f33;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .format-opt.active {
+      background: #0f3b28;
+      border-color: #0f3b28;
+      color: white;
+    }
+
+    .format-opt.active i {
+      color: white;
+    }
+
+    .format-opt i {
+      color: #1e8b4c;
+      font-size: 1.4rem;
+    }
+
+    .steps-row {
+      display: flex;
+      gap: 18px;
+      margin: 36px 0 40px;
+      flex-wrap: wrap;
+    }
+
+    .step-item {
+      flex: 1;
+      min-width: 140px;
+      background: #ecfef4;
+      border-radius: 32px;
+      padding: 20px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid #b8e2ca;
+    }
+
+    .step-num {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #0f3b28;
+      border: 1px solid #a3d8b8;
+    }
+
+    .step-desc {
+      font-weight: 600;
+      color: #154d2e;
+      line-height: 1.3;
+    }
+
+    .step-desc small {
+      font-weight: 400;
+      color: #519a6d;
+    }
+
+    .result-box {
+      background: linear-gradient(120deg, #ecfef4, #ffffff);
+      border: 1.5px solid #9fd8b6;
+      border-radius: 44px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .result-preview {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .preview-icon {
+      width: 70px;
+      height: 70px;
+      background: white;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.3rem;
+      color: #0f3b28;
+      border: 1px solid #c1f0d4;
+    }
+
+    .preview-text h3 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      color: #0c351f;
+    }
+
+    .preview-text p {
+      color: #367a50;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #0f3b28;
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 18px 48px;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 12px 22px -8px #0f3b2880;
+      transition: 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: #1d603d;
+      transform: scale(1.02);
+    }
+
+    .btn-primary i {
+      font-size: 1.4rem;
+    }
+
+    .footer {
+      margin-top: 42px;
+      text-align: center;
+      color: #558f6b;
+      border-top: 2px dashed #c1e6d2;
+      padding-top: 28px;
+      font-size: 0.95rem;
+    }
+
+    .footer i {
+      color: #1e8b4c;
+    }
+
+    .loading-spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .card { padding: 30px 20px; }
+      .input-line { flex-wrap: wrap; background: transparent; border: none; padding: 0; gap: 10px; }
+      .input-line input { background: #f0fdf6; border: 1.5px solid #bbe6ce; border-radius: 60px; padding: 16px 22px; }
+      .input-line button { width: 100%; justify-content: center; }
+      .result-box { flex-direction: column; align-items: flex-start; }
+      .btn-primary { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- profile kotak paling atas -->
+    <div class="profile-block">
+      <div class="profile-square">
+        <img src="nata.jpg" alt="nata" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22%230f3b28%22%2F%3E%3Ctext%20x%3D%2260%22%20y%3D%2278%22%20font-size%3D%2252%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ffffff%22%20font-family%3D%22Arial%22%3EN%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      </div>
+      <h1>TikTok Downloader by nata~</h1>
+      <div class="smile-tag"><i class="fas fa-laugh-squint"></i> :D <i class="fas fa-download"></i></div>
+    </div>
+
+    <!-- main card -->
+    <div class="card">
+
+      <div class="feature-pills">
+        <div class="pill"><i class="fas fa-bolt"></i> FAST</div>
+        <div class="pill"><i class="fas fa-shield-alt"></i> SECURE</div>
+        <div class="pill"><i class="fas fa-watermark"></i> NO WM</div>
+        <div class="pill"><i class="fas fa-music"></i> MP3/MP4</div>
+      </div>
+
+      <!-- input link -->
+      <div class="input-line">
+        <i class="fab fa-tiktok"></i>
+        <input type="text" placeholder="Tempel link TikTok (video/foto)" id="linkField" value="https://www.tiktok.com/@example/video/7123456789012345678">
+        <button id="processReal"><i class="fas fa-cloud-download-alt"></i> Proses</button>
+      </div>
+
+      <!-- pilihan mp3 / mp4 -->
+      <div class="format-switch" id="formatSwitch">
+        <div class="format-opt active" data-format="mp3"><i class="fas fa-music"></i> MP3</div>
+        <div class="format-opt" data-format="mp4"><i class="fas fa-film"></i> MP4</div>
+      </div>
+
+      <!-- steps -->
+      <div class="steps-row">
+        <div class="step-item"><span class="step-num">1</span><div class="step-desc">Copy link<br><small>dari TikTok</small></div></div>
+        <div class="step-item"><span class="step-num">2</span><div class="step-desc">Tempel & proses<br><small>di atas</small></div></div>
+        <div class="step-item"><span class="step-num">3</span><div class="step-desc">Download<br><small>pilih MP3/MP4</small></div></div>
+      </div>
+
+      <!-- result box real -->
+      <div class="result-box" id="realResult">
+        <div class="result-preview">
+          <div class="preview-icon" id="previewIcon"><i class="fas fa-music"></i></div>
+          <div class="preview-text">
+            <h3 id="fileName">tiktok_audio_nata.mp3</h3>
+            <p id="fileMeta">🎵 pilih format & proses dulu</p>
+          </div>
+        </div>
+        <button class="btn-primary" id="realDownloadBtn"><i class="fas fa-arrow-down"></i> Download</button>
+      </div>
+
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+      <i class="fas fa-copyright"></i> <strong>nata~</strong> · real video/audio · no watermark · all rights reversed <i class="fas fa-heart"></i>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const formatOpts = document.querySelectorAll('.format-opt');
+      const processReal = document.getElementById('processReal');
+      const linkField = document.getElementById('linkField');
+      const previewIcon = document.getElementById('previewIcon');
+      const fileName = document.getElementById('fileName');
+      const fileMeta = document.getElementById('fileMeta');
+      const realDownloadBtn = document.getElementById('realDownloadBtn');
+
+      let currentFormat = 'mp3';
+      let realVideoData = null; // { id, videoUrl, audioUrl? }
+      let loading = false;
+
+      // pilih format
+      formatOpts.forEach(opt => {
+        opt.addEventListener('click', function() {
+          formatOpts.forEach(o => o.classList.remove('active'));
+          this.classList.add('active');
+          currentFormat = this.dataset.format;
+          updatePreviewText();
+        });
+      });
+
+      function updatePreviewText() {
+        if (!realVideoData) {
+          if (currentFormat === 'mp3') {
+            fileName.innerText = 'tiktok_audio_nata.mp3';
+            previewIcon.innerHTML = '<i class="fas fa-music"></i>';
+            fileMeta.innerText = '🎵 proses dulu ya';
+          } else {
+            fileName.innerText = 'tiktok_video_nata.mp4';
+            previewIcon.innerHTML = '<i class="fas fa-film"></i>';
+            fileMeta.innerText = '🎬 proses dulu';
+          }
+          return;
+        }
+
+        if (currentFormat === 'mp3') {
+          fileName.innerText = `tiktok_${realVideoData.id}_audio.mp3`;
+          previewIcon.innerHTML = '<i class="fas fa-music"></i>';
+          fileMeta.innerText = '🔊 audio siap (from video)';
+        } else {
+          fileName.innerText = `tiktok_${realVideoData.id}_video.mp4`;
+          previewIcon.innerHTML = '<i class="fas fa-film"></i>';
+          fileMeta.innerText = '🎬 no watermark · HD';
+        }
+      }
+
+      // real API menggunakan TikWM (bisa dari frontend)
+      async function fetchRealFromTikWM(url) {
+        // TikWM punya endpoint: https://api.tikwm.com/video/info?url=...
+        // langsung panggil, mereka support CORS
+        const apiUrl = `https://api.tikwm.com/video/info?url=${encodeURIComponent(url)}`;
+        try {
+          const res = await fetch(apiUrl);
+          const json = await res.json();
+          if (json.code === 0 && json.data) {
+            return {
+              success: true,
+              id: json.data.id,
+              title: json.data.title || 'tiktok',
+              videoUrl: json.data.play, // video no watermark
+              musicUrl: json.data.music, // audio asli
+              cover: json.data.cover
+            };
+          }
+          return { success: false };
+        } catch (e) {
+          console.error(e);
+          return { success: false };
+        }
+      }
+
+      async function handleProcess() {
+        const rawLink = linkField.value.trim();
+        if (!rawLink.includes('tiktok.com')) {
+          alert('Link TikTok yang bener, cuk!');
+          return;
+        }
+
+        // loading
+        processReal.disabled = true;
+        processReal.innerHTML = '<span class="loading-spinner"></span> Loading...';
+
+        const result = await fetchRealFromTikWM(rawLink);
+
+        if (result.success) {
+          realVideoData = {
+            id: result.id,
+            videoUrl: result.videoUrl,
+            musicUrl: result.musicUrl
+          };
+          fileMeta.innerText = '✅ real data siap!';
+        } else {
+          // fallback terakhir: kasih tau error
+          alert('Gagal ambil data. Coba lagi atau ganti link.');
+          realVideoData = null;
+          fileMeta.innerText = '❌ gagal ambil video';
+        }
+
+        updatePreviewText();
+        processReal.disabled = false;
+        processReal.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Proses';
+      }
+
+      function handleDownload() {
+        if (!realVideoData) {
+          alert('Lu proses dulu kontol!');
+          return;
+        }
+
+        let downloadUrl = '';
+        let filename = '';
+
+        if (currentFormat === 'mp4') {
+          downloadUrl = realVideoData.videoUrl;
+          filename = `tiktok_${realVideoData.id}.mp4`;
+        } else {
+          // mp3
+          downloadUrl = realVideoData.musicUrl;
+          filename = `tiktok_${realVideoData.id}.mp3`;
+        }
+
+        if (!downloadUrl) {
+          alert('URL download gak tersedia, coba format lain.');
+          return;
+        }
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      processReal.addEventListener('click', handleProcess);
+      realDownloadBtn.addEventListener('click', handleDownload);
+      linkField.addEventListener('keypress', e => e.key === 'Enter' && handleProcess());
+
+      updatePreviewText();
+    })();
+  </script>
+</body>
+  </html>
