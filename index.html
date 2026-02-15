@@ -1,0 +1,156 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Downloader by nata~</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,Segoe UI,Roboto}
+body{background:#f4faf7;display:flex;justify-content:center;padding:20px;color:#0f3b28}
+.container{max-width:860px;width:100%}
+.card{background:#fff;border-radius:48px;padding:28px;box-shadow:0 10px 30px rgba(15,59,40,0.08)}
+
+.profile{text-align:center;margin-bottom:18px}
+.profile img{width:110px;height:110px;border-radius:22px;object-fit:cover;background:#e6f2ec}
+.title{font-size:28px;font-weight:700;margin-top:10px}
+.tagline{margin-top:4px;color:#1e8b4c}
+
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0}
+.pill{background:#e9f6ef;padding:6px 12px;border-radius:999px;font-size:13px;color:#0f3b28}
+
+.input-area{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.input-box{flex:1;display:flex;align-items:center;background:#fff;border:2px solid #e2f1ea;border-radius:14px;padding:10px}
+.input-box i{margin-right:8px}
+.input-box input{border:none;outline:none;flex:1;font-size:14px}
+
+.btn{background:#0f3b28;color:#fff;border:none;padding:12px 20px;border-radius:14px;cursor:pointer;font-weight:600;transition:.2s}
+.btn:hover{background:#1e8b4c}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+
+.formats{display:flex;gap:10px;margin-top:16px}
+.format{flex:1;padding:10px;border-radius:12px;border:2px solid #1e8b4c;background:#fff;cursor:pointer;font-weight:600}
+.format.active{background:#1e8b4c;color:#fff}
+
+.steps{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+.step{flex:1;min-width:140px;background:#f1f8f4;padding:12px;border-radius:16px;font-size:13px}
+.step span{display:inline-block;width:22px;height:22px;border-radius:50%;background:#1e8b4c;color:#fff;text-align:center;line-height:22px;margin-right:6px;font-size:12px}
+
+.result{display:none;margin-top:14px;padding:18px;border-radius:20px;background:#f6fbf8}
+.result h3{margin-bottom:6px}
+.meta{font-size:13px;margin-bottom:10px;color:#3b6b55}
+.download-btn{width:100%;padding:14px;border:none;border-radius:14px;background:#1e8b4c;color:#fff;font-weight:700;cursor:pointer}
+.download-btn:hover{background:#0f3b28}
+
+footer{text-align:center;margin-top:18px;font-size:13px;color:#3b6b55}
+
+@media(max-width:600px){.title{font-size:22px}}
+</style></head><body>
+<div class="container">
+<div class="card"><div class="profile">
+<img src="nata.jpg" onerror="this.style.display='none';document.getElementById('fallback').style.display='flex'">
+<div id="fallback" style="display:none;width:110px;height:110px;border-radius:22px;background:#1e8b4c;color:#fff;align-items:center;justify-content:center;font-size:40px;margin:auto">N</div>
+<div class="title">TikTok Downloader by nata~</div>
+<div class="tagline"><i class="fa-solid fa-face-smile"></i> Fast and clean downloader</div>
+</div><div class="pills">
+<div class="pill">FAST</div>
+<div class="pill">SECURE</div>
+<div class="pill">NO WM</div>
+<div class="pill">MP3/MP4</div>
+</div><div class="input-area">
+<div class="input-box">
+<i class="fa-brands fa-tiktok"></i>
+<input id="url" placeholder="Tempel link TikTok di sini">
+</div>
+<button class="btn" id="processBtn"><i class="fa-solid fa-download"></i> Proses</button>
+</div><div class="formats">
+<button class="format active" data-type="mp4">MP4</button>
+<button class="format" data-type="mp3">MP3</button>
+</div><div class="steps">
+<div class="step"><span>1</span>Copy link TikTok</div>
+<div class="step"><span>2</span>Tempel lalu proses</div>
+<div class="step"><span>3</span>Download pilih format</div>
+</div><div class="result" id="result">
+<h3 id="fileName">tiktok_xxx.mp4</h3>
+<div class="meta" id="meta">Memuat data...</div>
+<button class="download-btn" id="downloadBtn">DOWNLOAD</button>
+</div></div><footer>© 2025 nata~ <i class="fa-solid fa-heart"></i> all rights reversed</footer>
+</div><script>
+let currentFormat="mp4"
+let videoData=null
+
+const APIs=[
+url=>`https://api.tikwm.com/video/info?url=${encodeURIComponent(url)}`,
+url=>`https://tikwm.com/api/?url=${encodeURIComponent(url)}`
+]
+
+function setFormats(){
+document.querySelectorAll(".format").forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll(".format").forEach(b=>b.classList.remove("active"))
+btn.classList.add("active")
+currentFormat=btn.dataset.type
+updatePreview()
+}
+})
+}
+
+setFormats()
+
+document.getElementById("url").addEventListener("keypress",e=>{if(e.key==="Enter")process()})
+
+document.getElementById("processBtn").onclick=process
+
+async function fetchFromAPIs(link){
+for(const build of APIs){
+try{
+const res=await fetch(build(link))
+const json=await res.json()
+if(json?.data?.play || json?.data?.music) return json.data
+}catch(e){}
+}
+throw new Error("Semua API gagal")
+}
+
+async function process(){
+const link=document.getElementById("url").value.trim()
+if(!link.includes("tiktok")){alert("Link tidak valid");return}
+
+const btn=document.getElementById("processBtn")
+btn.disabled=true
+btn.innerText="Loading..."
+
+try{
+videoData=await fetchFromAPIs(link)
+updatePreview()
+document.getElementById("result").style.display="block"
+}catch(e){
+alert("Gagal mengambil data. Coba link lain atau ulangi.")
+}finally{
+btn.disabled=false
+btn.innerHTML='<i class="fa-solid fa-download"></i> Proses'
+}
+}
+
+function updatePreview(){
+if(!videoData) return
+const id=videoData.id||"video"
+const ext=currentFormat==="mp4"?"mp4":"mp3"
+
+document.getElementById("fileName").innerText=`tiktok_${id}_${currentFormat}.${ext}`
+
+document.getElementById("meta").innerText=currentFormat==="mp4"?"Video tanpa watermark siap diunduh":"Audio asli siap diunduh"
+}
+
+document.getElementById("downloadBtn").onclick=()=>{
+if(!videoData) return
+
+const url=currentFormat==="mp4"?videoData.play:videoData.music
+if(!url){alert("Format tidak tersedia");return}
+
+const a=document.createElement("a")
+a.href=url
+a.download=document.getElementById("fileName").innerText
+document.body.appendChild(a)
+a.click()
+a.remove()
+}
+</script></body>
+</html>
